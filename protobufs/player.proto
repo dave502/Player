@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package player_server;
+
+enum PlayerStatus{
+    WAITING  = 0;
+    PLAYING  = 1;
+    PAUSED   = 2;
+    STOPED   = 3;
+    NEW_SONG = 4;
+}
+
+service Player {
+    rpc AddSong (RequestSongPath) returns (ResponseResult);
+    rpc Play (RequestSongIndex) returns (ResponseResult);
+    rpc GetPlayList (Empty) returns (ResponsePlaylist);
+    rpc PlayingSongInfo (Empty) returns (ResponseSongInformation);
+    rpc Pause (Empty) returns (ResponseResult);
+    rpc Next (Empty) returns (ResponseResult);
+    rpc Prev (Empty) returns (ResponseResult);
+    rpc Stop (Empty) returns (ResponseResult);
+    rpc SetPosition (RequestSongPosition) returns (ResponseResult);
+    rpc IsPaused (Empty) returns (ResponsePaused);
+    rpc DeleteSong (RequestSongIndex) returns (ResponseResult);
+    rpc GetPlayerStatus (Empty) returns (stream ResponsePlayerStatus);
+    rpc GetSongIndex (Empty) returns (ResponseSongIndex);
+}
+
+
+message RequestSongPath {
+    repeated string path = 1;
+}
+
+message RequestSongIndex {
+    int32 index = 1;
+}
+
+message RequestSongPosition {
+    int32 position = 1;
+}
+
+message ResponseSongIndex {
+    int32 index = 1;
+    string error = 2;
+}
+
+message ResponsePlayerStatus {
+    repeated PlayerStatus status = 1;
+    int32 position = 2;
+    string error = 3;
+}
+
+message ResponseSongInformation {
+    string title = 1;
+    float duration = 2;
+    string error = 3;
+}
+
+message ResponsePlaylist {
+    repeated string song_title = 1;
+    int32 playing = 2;
+    string error = 3;
+}
+
+message ResponseResult {
+    string error = 1;
+}
+
+message ResponsePaused {
+    int32 result = 1;
+    string error = 3;
+}
+
+message Empty {
+}
+
